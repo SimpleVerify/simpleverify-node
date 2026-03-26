@@ -9,7 +9,7 @@ import {
   ValidationError,
 } from './exceptions';
 
-export type FetchFunction = typeof globalThis.fetch;
+export type FetchFunction = (url: string, init?: any) => Promise<any>;
 
 export interface ApiClientOptions {
   apiKey: string;
@@ -32,7 +32,7 @@ export class ApiClient {
     this.apiKey = options.apiKey;
     this.baseUrl = options.baseUrl.replace(/\/+$/, '');
     this.timeout = options.timeout;
-    this.fetchFn = options.fetch ?? globalThis.fetch;
+    this.fetchFn = options.fetch ?? fetch;
   }
 
   async request<T>(method: string, path: string, body?: unknown): Promise<T> {
@@ -40,7 +40,7 @@ export class ApiClient {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
-    let response: Response;
+    let response: any;
     try {
       response = await this.fetchFn(url, {
         method,
