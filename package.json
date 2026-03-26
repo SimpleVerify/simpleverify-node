@@ -1,0 +1,39 @@
+{
+  "name": "simpleverify",
+  "version": "1.0.0",
+  "description": "Official Node.js/TypeScript client library for the SimpleVerify API - developer-first verification alerts (SMS, email, magic link)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "simpleverify",
+    "verification",
+    "sms",
+    "email",
+    "magic-link",
+    "otp",
+    "2fa"
+  ],
+  "author": "SimpleVerify",
+  "license": "MIT",
+  "homepage": "https://simpleverify.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simpleverify/simpleverify-node.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}
