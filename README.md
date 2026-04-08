@@ -72,6 +72,7 @@ const verification = await client.verifications.send({
   type: 'magic_link',
   destination: 'user@example.com',
   redirect_url: 'https://yourapp.com/dashboard',
+  failure_redirect_url: 'https://yourapp.com/auth/magic-link-result',
 });
 
 // With metadata
@@ -103,6 +104,17 @@ verification.test?.token  // 64-char string (magic link)
 ```
 
 In live mode (`vk_live_` key), `verification.test` is `undefined`.
+
+If you set `failure_redirect_url` on a magic link, failed clicks redirect there with `status` (`invalid`, `expired`, or `already_used`) and `verification_id` query parameters.
+
+Successful magic link clicks redirect with `status=verified`, `verification_id`, and a one-time `exchange_code`. Redeem that code from your backend:
+
+```typescript
+const exchange = await client.verifications.exchange(verificationId, exchangeCode);
+
+exchange.destination // verified email address
+exchange.metadata    // original metadata object
+```
 
 ### Check a Code
 

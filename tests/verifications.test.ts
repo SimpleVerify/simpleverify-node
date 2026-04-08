@@ -157,4 +157,29 @@ describe('VerificationsResource', () => {
     expect(requests[0].url).toContain('/api/v1/verify/abc-123');
     expect(requests[0].init.method).toBe('GET');
   });
+
+  it('exchanges a verified magic link', async () => {
+    const { client, requests } = createClient([{
+      body: {
+        status: 'success',
+        data: {
+          verification_id: 'magic-456',
+          type: 'magic_link',
+          destination: 'user@example.com',
+          metadata: { user_id: 42 },
+          verified_at: '2026-03-25T12:05:00+00:00',
+          environment: 'test',
+        },
+      },
+      status: 200,
+    }]);
+
+    const result = await client.verifications.exchange('magic-456', 'exchange-code-123');
+
+    expect(result.type).toBe('magic_link');
+    expect(result.destination).toBe('user@example.com');
+    expect(result.environment).toBe('test');
+    expect(requests[0].url).toContain('/api/v1/verify/exchange');
+    expect(requests[0].init.method).toBe('POST');
+  });
 });

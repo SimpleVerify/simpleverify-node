@@ -2,6 +2,7 @@ export interface SendVerificationRequest {
   type: 'sms' | 'email' | 'magic_link';
   destination: string;
   redirect_url?: string;
+  failure_redirect_url?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -21,6 +22,15 @@ export interface VerificationCheck {
   valid: boolean;
   type?: string;
   destination?: string;
+}
+
+export interface MagicLinkExchange {
+  verification_id: string;
+  type: string;
+  destination: string;
+  metadata: Record<string, unknown>;
+  verified_at?: string;
+  environment?: string;
 }
 
 export interface TestData {

@@ -1,5 +1,5 @@
 import { ApiClient } from './api-client';
-import { SendVerificationRequest, Verification, VerificationCheck } from './models';
+import { MagicLinkExchange, SendVerificationRequest, Verification, VerificationCheck } from './models';
 
 export class VerificationsResource {
   constructor(private readonly apiClient: ApiClient) {}
@@ -17,5 +17,12 @@ export class VerificationsResource {
 
   async get(verificationId: string): Promise<Verification> {
     return this.apiClient.request<Verification>('GET', `/api/v1/verify/${encodeURIComponent(verificationId)}`);
+  }
+
+  async exchange(verificationId: string, exchangeCode: string): Promise<MagicLinkExchange> {
+    return this.apiClient.request<MagicLinkExchange>('POST', '/api/v1/verify/exchange', {
+      verification_id: verificationId,
+      exchange_code: exchangeCode,
+    });
   }
 }
