@@ -32,7 +32,7 @@ describe('VerificationsResource', () => {
     expect(result.test?.code).toBe('482913');
     expect(result.test?.token).toBeUndefined();
 
-    expect(requests[0].url).toContain('/api/v1/verify/send');
+    expect(requests[0].url).toContain('/v1/verify/send');
     expect(requests[0].init.method).toBe('POST');
   });
 
@@ -110,7 +110,7 @@ describe('VerificationsResource', () => {
     expect(result.type).toBe('sms');
     expect(result.destination).toBe('*******4567');
 
-    expect(requests[0].url).toContain('/api/v1/verify/check');
+    expect(requests[0].url).toContain('/v1/verify/check');
     expect(requests[0].init.method).toBe('POST');
   });
 
@@ -154,7 +154,7 @@ describe('VerificationsResource', () => {
     expect(result.status).toBe('verified');
     expect(result.created_at).toBe('2026-03-25T12:00:00+00:00');
 
-    expect(requests[0].url).toContain('/api/v1/verify/abc-123');
+    expect(requests[0].url).toContain('/v1/verify/abc-123');
     expect(requests[0].init.method).toBe('GET');
   });
 
@@ -179,7 +179,7 @@ describe('VerificationsResource', () => {
     expect(result.type).toBe('magic_link');
     expect(result.destination).toBe('user@example.com');
     expect(result.environment).toBe('test');
-    expect(requests[0].url).toContain('/api/v1/verify/exchange');
+    expect(requests[0].url).toContain('/v1/verify/exchange');
     expect(requests[0].init.method).toBe('POST');
   });
 });
