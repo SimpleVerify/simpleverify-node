@@ -1,12 +1,9 @@
 name: Publish
 
 on:
-  release:
-    types: [published]
-  workflow_run:
-    workflows: [Release]
-    types: [completed]
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
@@ -15,7 +12,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
 
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +29,13 @@ jobs:
         id: package
         run: |
           VERSION=$(node -p "require('./package.json').version")
+          TAG="${GITHUB_REF_NAME#v}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "Tag v$TAG does not match package.json version $VERSION."
+            exit 1
+          fi
 
           if npm view "simpleverify@$VERSION" version > /dev/null 2>&1; then
             echo "published=true" >> "$GITHUB_OUTPUT"
