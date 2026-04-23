@@ -3,6 +3,9 @@ name: Publish
 on:
   release:
     types: [published]
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -12,6 +15,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
 
     steps:
       - uses: actions/checkout@v4
@@ -22,14 +26,32 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
 
+      - name: Check package version
+        id: package
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          if npm view "simpleverify@$VERSION" version > /dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "simpleverify@$VERSION is already published; skipping."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "simpleverify@$VERSION is not published yet."
+          fi
+
       - name: Install dependencies
+        if: steps.package.outputs.published != 'true'
         run: npm ci
 
       - name: Run tests
+        if: steps.package.outputs.published != 'true'
         run: npm test
 
       - name: Build
+        if: steps.package.outputs.published != 'true'
         run: npm run build
 
       - name: Publish to npm
+        if: steps.package.outputs.published != 'true'
         run: npm publish
