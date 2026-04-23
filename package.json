@@ -1,6 +1,6 @@
 {
   "name": "simpleverify",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Official Node.js/TypeScript client library for the SimpleVerify API - developer-first verification alerts (SMS, email, magic link)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
